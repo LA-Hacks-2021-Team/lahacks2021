@@ -1,8 +1,4 @@
-from scipy.spatial import distance as dist
-from imutils import perspective
-from imutils import contours
 from cv2 import cv2 as cv
-import imutils
 import numpy as np
 
 # imports image
