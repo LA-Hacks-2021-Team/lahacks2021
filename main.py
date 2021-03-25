@@ -5,9 +5,6 @@ from cv2 import cv2 as cv
 import imutils
 import numpy as np
 
-def midpoint(ptA, ptB):
-	return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
-
 # imports image
 img = cv.imread('Crosshairs/c3.png')
 # creates canvas to draw contours on
