@@ -1,1 +1,1 @@
-FLASK_APP=crosshairapp.py
+FLASK_APP=app.py
