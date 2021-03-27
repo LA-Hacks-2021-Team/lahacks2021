@@ -17,8 +17,8 @@ def get_prediction(content, project_id, model_id):
   request = prediction_client.predict(name=name, payload=payload, params=params)
   return request  # waits till request is returned
 
-if __name__ == '__main__':
 
+def cropImage(uploaded_file):
     '''
     Generate bounding boxes from VisionAPI
     '''
@@ -53,12 +53,15 @@ if __name__ == '__main__':
     cropped_img = og_img[round(height * points[0][1]):round(height * points[1][1]), round(width * points[0][0]):round(width * points[1][0])]
     cv.imwrite('Crosshairs/c1_cropped.png', cropped_img)
 
+    return 'Crosshairs/c1_cropped.png'
+
+def readOutlines(crosshair_file):
     '''
     Reads Outlines with CV
     '''
 
     # imports image
-    img = cv.imread('Crosshairs/c1_cropped.png')
+    img = cv.imread(crosshair_file)
     # creates canvas to draw contours on
     blank = np.zeros(img.shape, dtype='uint8')
     # converts image to grayscale
@@ -79,12 +82,27 @@ if __name__ == '__main__':
     x, y, w, h = cv.boundingRect(cnt)
     print('Width = ' + str(w) + ' pixels')
     print('Height = ' + str(h) + ' pixels')
-    # draws bounding box in red onto blank canvas
-    rect = cv.minAreaRect(cnt)
-    box = cv.boxPoints(rect)
-    box = np.int0(box)
-    cv.drawContours(blank, [box], -1, (0, 0, 255), 1)
-    cv.imshow('Contours Drawn', blank)
 
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    retValues = {
+            'width': w,
+            'height': h,
+        }
+
+    return retValues
+
+"""  # draws bounding box in red onto blank canvas
+rect = cv.minAreaRect(cnt)
+box = cv.boxPoints(rect)
+box = np.int0(box)
+cv.drawContours(blank, [box], -1, (0, 0, 255), 1)
+cv.imshow('Contours Drawn', blank)
+
+cv.waitKey(0)
+cv.destroyAllWindows()
+
+retValues = {
+    'width': w,
+    'height': h,
+}
+
+return retValues """

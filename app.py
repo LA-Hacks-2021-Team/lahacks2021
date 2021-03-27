@@ -1,13 +1,20 @@
 import imghdr
 import os
-from flask import Flask, render_template, flash, request, redirect, url_for, abort
+from flask import Flask, render_template, flash, request, redirect, url_for, abort, jsonify
 from werkzeug.utils import secure_filename
+from flask_dropzone import Dropzone
+
+from main import *
 
 app = Flask(__name__)
+dropzone = Dropzone(app)
 
 app.config['MAX_CONTENT_LENGTH'] = 4096 * 4096
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
 app.config['UPLOAD_PATH'] = 'uploads'
+
+app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image'
+app.config['DROPZONE_MAX_FILES'] = 1
 
 def validate_image(stream):
     header = stream.read(512)
@@ -35,4 +42,8 @@ def upload_files():
 
 @app.errorhandler(413)
 def too_large(e):
-    return "File is too large", 413   
+    return "File is too large", 413
+
+@app.route('/data')
+def data():
+    return cropImage(os.listdir('uploads')[0])

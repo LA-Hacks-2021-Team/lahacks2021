@@ -2,13 +2,46 @@
     <head>
         <title>Crosshair Identifier</title>
         <link rel="stylesheet" href="/static/css/main.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+        {{ dropzone.load_css() }}
+        {{ dropzone.style('border: 2px dashed #0087F7; \
+            margin-top: 0%; margin-right: 25%; margin-left: 25%; \
+            min-height: 200px; background-color: #616E7C; color: #F5F7FA;') }}
     </head>
     <body>
         <h1>Crosshair Identifier</h1>
         <h2>Upload a Screenshot Below</h2>
-        <form action="{{ url_for('upload_files') }}" class="dropzone" style="background-color:#52616E7C;color:#F5F7FA;">
-        </form>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+
+        {{ dropzone.create(action=url_for('upload_files')) }}
+        <div style="text-align:center;">
+            <button id="click">Approximate Values</button>
+            <button id="reset">Reset</button>
+        </div>
+
+        <p id="settings" style="display: none;color:#F5F7FA;text-align: center;">Test</p>
+        <img id="cropped" src="{{ url_for('static', filename='c1_cropped.png') }}" style="display: shown;">
+    
+        {{ dropzone.load_js() }}
+        {{ dropzone.config() }}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+            $('#click').click(() =>{
+                $.ajax({
+                    type: 'GET',
+                    url: '/data',
+                    success: (resp) => {
+                        /* const height = resp.height;
+                        const width = resp.width;
+                        $('p').text(`Height: ${height} Width: ${width}`);
+                        $('#settings').show(); */
+                        $('#cropped').attr("src",resp);
+                        $('#cropped').show();
+                    }
+                });
+            });
+
+            $('#reset').click(() => {
+                location.reload();
+            });
+        </script>
     </body>
 </html>
