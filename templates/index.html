@@ -29,10 +29,10 @@
                     type: 'GET',
                     url: '/data',
                     success: (resp) => {
-                        /* const height = resp.height;
+                        const height = resp.height;
                         const width = resp.width;
-                        $('p').text(`Height: ${height} Width: ${width}`);
-                        $('#settings').show(); */
+                        $('#settings').text(`Height: ${height} Width: ${width}`);
+                        $('#settings').show();
                         $('#cropped').attr("src","{{url_for('static', filename='img/c1_cropped.png')}}");
                         $('#cropped').show();
                     }

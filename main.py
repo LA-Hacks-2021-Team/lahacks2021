@@ -57,7 +57,7 @@ def cropImage(uploaded_file):
     cv.imwrite('static/img/c1_cropped.png', cropped_img)
     os.remove(file_path)
 
-    time.sleep(1)
+    # time.sleep(1)
 
     return "img/c1_cropped.png"
 

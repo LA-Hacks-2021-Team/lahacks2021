@@ -47,4 +47,12 @@ def too_large(e):
 
 @app.route('/data')
 def data():
-    return cropImage('uploads/'+os.listdir('uploads')[0])
+    image = cropImage('uploads/'+os.listdir('uploads')[0])
+    imageData = readOutlines('static/'+image)
+
+    data = {
+        'image': image,
+        'width': imageData['width'],
+        'height': imageData['height'],
+    }
+    return jsonify(data)
