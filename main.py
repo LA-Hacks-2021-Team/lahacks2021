@@ -1,8 +1,10 @@
 import sys
 import os
+import math
 
 from google.cloud import automl_v1beta1
 from google.cloud import automl
+from PIL import Image
 
 from cv2 import cv2 as cv
 import numpy as np
@@ -29,7 +31,7 @@ if __name__ == '__main__':
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=r'lahacks.json'
 
-    file_path = 'Crosshairs/c1.png'
+    file_path = 'Crosshairs/c30.png'
     project_id = "fleet-point-308504"
     model_id = "IOD4595987191406002176"
 
@@ -43,13 +45,9 @@ if __name__ == '__main__':
         box = result.image_object_detection.bounding_box.normalized_vertices
         for vertice in box:
             points.append([vertice.x, vertice.y])
-
-        print(points)
     
-    og_img = cv.imread('Crosshairs/c1.png')
+    og_img = cv.imread(file_path)
     height, width, channels = og_img.shape
-    print(height)
-    print(width)
     cropped_img = og_img[round(height * points[0][1]):round(height * points[1][1]), round(width * points[0][0]):round(width * points[1][0])]
     cv.imwrite('Crosshairs/c1_cropped.png', cropped_img)
 
@@ -85,6 +83,14 @@ if __name__ == '__main__':
     box = np.int0(box)
     cv.drawContours(blank, [box], -1, (0, 0, 255), 1)
     cv.imshow('Contours Drawn', blank)
-
+    
+    im = Image.open('Crosshairs/c1_cropped.png')
+    rgb_im = im.convert('RGB')
+    r, g, b = rgb_im.getpixel(((x + math.ceil(w/2)),(y + math.ceil(h/2))))
+    thickness = 0.5 + ((w - 3) * 0.5)
+    size = math.ceil(h / 2)
+    print("cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + ";")
     cv.waitKey(0)
     cv.destroyAllWindows()
+
+    
