@@ -77,8 +77,17 @@ if __name__ == '__main__':
     cnt = contours[0]
     # defines bounding rectangle around crosshair and prints width and height of box
     x, y, w, h = cv.boundingRect(cnt)
-    print('Width = ' + str(w) + ' pixels')
-    print('Height = ' + str(h) + ' pixels')
+    # print('Width = ' + str(w) + ' pixels')
+    # print('Height = ' + str(h) + ' pixels')
+    # calculates size and thickness from bounding box
+    size = h / 2
+    thickness = w/1.5
+    if thickness < np.floor(thickness) + .5: 
+        thickness = np.floor(thickness)
+    elif thickness < np.ceil(thickness):
+        thickness = np.floor(thickness) + .5
+    print('Size = ' + str(size))
+    print('Thickness = ' + str(thickness))
     # draws bounding box in red onto blank canvas
     rect = cv.minAreaRect(cnt)
     box = cv.boxPoints(rect)
