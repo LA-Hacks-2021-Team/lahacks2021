@@ -18,7 +18,7 @@
         </div>
 
         <p id="settings" style="display: none;color:#F5F7FA;text-align: center;">Test</p>
-        <img id="cropped" src="{{ url_for('static', filename='c1_cropped.png') }}" style="display: shown;">
+        <p style="text-align: center;"><img id="cropped" src="" style="display: none; width: 15%; height: auto;"></p>
     
         {{ dropzone.load_js() }}
         {{ dropzone.config() }}
@@ -33,7 +33,7 @@
                         const width = resp.width;
                         $('p').text(`Height: ${height} Width: ${width}`);
                         $('#settings').show(); */
-                        $('#cropped').attr("src",resp);
+                        $('#cropped').attr("src","{{url_for('static', filename='img/c1_cropped.png')}}");
                         $('#cropped').show();
                     }
                 });

@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, flash, request, redirect, url_for, abort, jsonify
 from werkzeug.utils import secure_filename
 from flask_dropzone import Dropzone
+import asyncio
 
 from main import *
 
@@ -46,4 +47,4 @@ def too_large(e):
 
 @app.route('/data')
 def data():
-    return cropImage(os.listdir('uploads')[0])
+    return cropImage('uploads/'+os.listdir('uploads')[0])

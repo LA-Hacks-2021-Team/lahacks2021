@@ -6,6 +6,7 @@ from google.cloud import automl
 
 from cv2 import cv2 as cv
 import numpy as np
+import time
 
 # 'content' is base-64-encoded image data.
 def get_prediction(content, project_id, model_id):
@@ -29,9 +30,11 @@ def cropImage(uploaded_file):
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=r'lahacks.json'
 
-    file_path = 'Crosshairs/c1.png'
+    file_path = uploaded_file
     project_id = "fleet-point-308504"
     model_id = "IOD4595987191406002176"
+
+    os.remove('static/img/c1_cropped.png')
 
     with open(file_path, 'rb') as ff:
         content = ff.read()
@@ -46,14 +49,17 @@ def cropImage(uploaded_file):
 
         print(points)
     
-    og_img = cv.imread('Crosshairs/c1.png')
+    og_img = cv.imread(uploaded_file)
     height, width, channels = og_img.shape
     print(height)
     print(width)
     cropped_img = og_img[round(height * points[0][1]):round(height * points[1][1]), round(width * points[0][0]):round(width * points[1][0])]
-    cv.imwrite('Crosshairs/c1_cropped.png', cropped_img)
+    cv.imwrite('static/img/c1_cropped.png', cropped_img)
+    os.remove(file_path)
 
-    return 'Crosshairs/c1_cropped.png'
+    time.sleep(1)
+
+    return "img/c1_cropped.png"
 
 def readOutlines(crosshair_file):
     '''
