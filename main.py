@@ -22,15 +22,14 @@ if __name__ == '__main__':
     '''
     Generate bounding boxes from VisionAPI
     '''
-    #os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="D:\lahacksproject\VisionAPIDemo\lahacks.json"
+#   os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="D:\lahacksproject\VisionAPIDemo\lahacks.json"
 #   file_path = sys.argv[1]
 #   project_id = sys.argv[2]
 #   model_id = sys.argv[3]
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=r'lahacks.json'
 
-    #file_path = "D:\lahacksproject\crosshair1.png"
-    file_path = sys.argv[1]
+    file_path = 'Crosshairs/c1.png'
     project_id = "fleet-point-308504"
     model_id = "IOD4595987191406002176"
 
@@ -46,13 +45,20 @@ if __name__ == '__main__':
             points.append([vertice.x, vertice.y])
 
         print(points)
+    
+    og_img = cv.imread('Crosshairs/c1.png')
+    height, width, channels = og_img.shape
+    print(height)
+    print(width)
+    cropped_img = og_img[round(height * points[0][1]):round(height * points[1][1]), round(width * points[0][0]):round(width * points[1][0])]
+    cv.imwrite('Crosshairs/c1_cropped.png', cropped_img)
 
     '''
     Reads Outlines with CV
     '''
 
     # imports image
-    img = cv.imread('Crosshairs/c4.png')
+    img = cv.imread('Crosshairs/c1_cropped.png')
     # creates canvas to draw contours on
     blank = np.zeros(img.shape, dtype='uint8')
     # converts image to grayscale
