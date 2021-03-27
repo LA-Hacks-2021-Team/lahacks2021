@@ -1,13 +1,30 @@
-<html>
-    <head>
-        <title>Crosshair Identifier</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
-    </head>
-    <body style="background-color:#323F4B;">
-        <h1 style="color:#F5F7FA";>Crosshair Identifier</h1>
-        <h2 style="color:#F5F7FA";>Upload CSGO Screenshots Below</h2>
-        <form action="{{ url_for('upload_files') }}" class="dropzone" style="background-color:#52616E7C;color:#F5F7FA;">
-        </form>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
-    </body>
-</html>
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}
+    {{super()}}
+{% endblock %}
+
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+{% endblock %}
+
+{% block title %}
+    Crosshair Identifier
+{% endblock %}
+<!-- <body style="background-color:#323F4B;"> -->
+
+{% block body_attribs %}
+    style="background-color:#323F4B;"
+{% endblock %}
+    
+{% block content %}
+    <h1 style="color:#F5F7FA";>Crosshair Identifier</h1>
+    <h2 style="color:#F5F7FA";>Upload CSGO Screenshots Below</h2>
+    <form action="{{ url_for('upload_files') }}" class="dropzone" style="background-color:#52616E7C;color:#F5F7FA;">
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+{% endblock %}
