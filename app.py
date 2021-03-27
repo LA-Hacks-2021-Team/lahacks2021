@@ -3,7 +3,6 @@ import os
 from flask import Flask, render_template, flash, request, redirect, url_for, abort, jsonify
 from werkzeug.utils import secure_filename
 from flask_dropzone import Dropzone
-import asyncio
 
 from main import *
 
