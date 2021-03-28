@@ -109,9 +109,11 @@ def readOutlines(crosshair_file):
     dy = cyR - cyL
     D = np.sqrt(dx*dx+dy*dy)
     #Thickness and size roughly increase pixel distance by 2, 2.4 respectively, each addition of gap increases distance by 2
-    gap = math.ceil(int(((D - thickness*2 - size*2.4)/2 + (D - thickness*2 - size*2.4)%2)))
+    gap = round(((D - thickness*2 - size*2.4)/2 + (D - thickness*2 - size*2.4)%2),0)
+    print("gap done")
 
     console = "cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + "; cl_crosshairgap " + str(gap)
+    print("console done")
     cv.destroyAllWindows()
 
     retData = {
@@ -123,5 +125,7 @@ def readOutlines(crosshair_file):
         "gap": gap,
         "console":console,
     }
+
+    print("done")
 
     return retData

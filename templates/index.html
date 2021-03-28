@@ -1,85 +1,48 @@
-{% extends "bootstrap/base.html" %}
-
-
-{% block head %}
-    <title>Crosshair Analyzer</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-
-    {% block styles %}
-        {{super()}}
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+<html>
+    <head>
+        <title>Crosshair Analyzer</title>
         <link rel="stylesheet" href="/static/css/main.css"/>
-
         {{ dropzone.load_css() }}
         {{ dropzone.style('border: 2px dashed #0087F7; \
-            margin-top: 2%; margin-right: 25%; margin-left: 25%; \
+            margin-top: 0%; margin-right: 25%; margin-left: 25%; \
             min-height: 200px; background-color: #616E7C; color: #F5F7FA;') }}
-    {% endblock %}
-{% endblock %}
+    </head>
+    <body>
+        <h1>Crosshair Analyzer</h1>
+        <h2>Upload a Screenshot Below</h2>
 
-{% block content %}
-    <h1>Crosshair Analyzer</h1>
-    <h2>Upload a Screenshot Below</h2>
+        {{ dropzone.create(action=url_for('upload_files')) }}
+        <div style="text-align:center;">
+            <button id="click">Approximate Values</button>
+            <button id="reset">Reset</button>
+        </div>
 
-    {{ dropzone.create(action=url_for('upload_files')) }}
-    <div style="text-align:center;">
-        <button id="click" type="button" class="btn btn-primary" style="margin-top:2%;margin-bottom:1.5%;">Approximate Values</button>
-        <button id="reset" type="button" class="btn btn-secondary" style="margin-top:2%;margin-bottom:1.5%;">Reset</button>
-    </div>
-
-    <!-- <table style="margin-left:15%;margin-right:15%;">
-        <tr>
-            <td>
-                <img id="cropped" src="https://i.redd.it/lgs9hva1ur251.gif" style="display: none; width: 15%; height: 15%;">
-            </td>
-            <td>
-                <p id="settings" style="display: none;color:#F5F7FA;">Analyzing image...</p>
-            </td>
-        </tr>
-    </table> -->
-
-    <p style="text-align: center;"><img id="cropped" src="https://i.redd.it/lgs9hva1ur251.gif" style="display: none; width: 15%; height: auto;"></p>
-    <p id="settings" style="display: none;color:#F5F7FA;text-align: center;">Analyzing image...</p>
-
-    {{ dropzone.load_js() }}
-    {{ dropzone.config() }}
-    {{super()}}
-{% endblock %}
-
-{% block scripts %}
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        $('#click').click(() =>{
-            $('#settings').show()
-            $('#cropped').show()
-            $.ajax({
-                type: 'GET',
-                url: '/data',
-                success: (resp) => {
-                    if (resp.size == null) {
-                        $('#settings').text(`A invalid image was provided or an error occured! Please refresh and try again.`);
-                        return;
+        <p id="settings" style="display: none;color:#F5F7FA;text-align: center;">Analyzing Crosshair</p>
+        <p style="text-align: center;"><img id="cropped" src="https://i.redd.it/lgs9hva1ur251.gif" style="display: none; width: 15%; height: auto;"></p>
+    
+        {{ dropzone.load_js() }}
+        {{ dropzone.config() }}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+            $('#click').click(() =>{
+                $('#settings').show();
+                $('#cropped').show();
+                $.ajax({
+                    type: 'GET',
+                    url: '/data',
+                    success: (resp) => {
+                         $('#settings').append(`Color: (${resp.red},${resp.green},${resp.blue}) <br/>
+                            Size: ${resp.size} <br/>
+                            Thickness: ${resp.thickness} <br/>
+                            Gap: ${resp.gap} <br/>
+                            ${resp.console} <br/>`);
+                        $('#cropped').attr("src","{{url_for('static', filename='img/cropped.png')}}");
                     }
-
-                    $('#settings').html(`Color: (${resp.red},${resp.green},${resp.blue}) <br/>
-                        Size: ${resp.size} <br/>
-                        Thickness: ${resp.thickness} <br/>
-                        Gap: ${resp.gap} <br/><br/>
-                        <code style="background-color:#1F2933;color:#E4E7EB">${resp.console}</code>`);
-                    $("#settings").css({"text-align": "center", "margin-left": "15%", "margin-right": "15%"})
-                    $('#cropped').attr("src","{{url_for('static', filename='img/cropped.png')}}");
-                }
+                });
             });
-        });
 
-        $('#reset').click(() => {
-            location.reload();
-        });
-    </script>
-    {{super()}}
-{% endblock %}
+            $('#reset').click(() => {
+                location.reload();
+            });
+        </script>
+    </body>
