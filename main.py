@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=r'lahacks.json'
 
-    file_path = 'Crosshairs/c30.png'
+    file_path = 'Crosshairs/L10_T2_G0.png'
     project_id = "fleet-point-308504"
     model_id = "IOD4595987191406002176"
 
@@ -89,7 +89,22 @@ if __name__ == '__main__':
     r, g, b = rgb_im.getpixel(((x + math.ceil(w/2)),(y + math.ceil(h/2))))
     thickness = 0.5 + ((w - 3) * 0.5)
     size = math.ceil(h / 2)
-    print("cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + ";")
+    
+    #Gap Calculator
+    #Finds pixel distance between centers of hairs
+    M = cv.moments(contours[0])
+    cxR = int(M['m10']/M['m00'])
+    cyR = int(M['m01']/M['m00'])
+    M = cv.moments(contours[3])
+    cxL = int(M['m10']/M['m00'])
+    cyL = int(M['m01']/M['m00'])
+    dx = cxR - cxL
+    dy = cyR - cyL
+    D = np.sqrt(dx*dx+dy*dy)
+    #Thickness and size roughly increase pixel distance by 2, 2.4 respectively, each addition of gap increases distance by 2
+    gap = round(((D - thickness*2 - size*2.4)/2 + (D - thickness*2 - size*2.4)%2),2)
+
+    print("cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + "; cl_crosshairgap " + str(gap))
     cv.waitKey(0)
     cv.destroyAllWindows()
 
