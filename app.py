@@ -3,12 +3,10 @@ import os
 from flask import Flask, render_template, flash, request, redirect, url_for, abort, jsonify
 from werkzeug.utils import secure_filename
 from flask_dropzone import Dropzone
-from flask_bootstrap import Bootstrap
 
 from main import *
 
 app = Flask(__name__)
-Bootstrap(app)
 dropzone = Dropzone(app)
 
 app.config['MAX_CONTENT_LENGTH'] = 4096 * 4096
@@ -17,7 +15,6 @@ app.config['UPLOAD_PATH'] = 'uploads'
 
 app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image'
 app.config['DROPZONE_MAX_FILES'] = 1
-app.config['DROPZONE_MAX_FILE_SIZE'] = 10
 
 def validate_image(stream):
     header = stream.read(512)
@@ -50,5 +47,11 @@ def too_large(e):
 @app.route('/data')
 def data():
     image = cropImage('uploads/'+os.listdir('uploads')[0])
-    data = readOutlines('static/'+image)
+    imageData = readOutlines('static/'+image)
+
+    data = {
+        'image': image,
+        'width': imageData['width'],
+        'height': imageData['height'],
+    }
     return jsonify(data)

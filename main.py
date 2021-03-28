@@ -32,9 +32,11 @@ def cropImage(uploaded_file):
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=r'lahacks.json'
 
-    file_path = uploaded_file
+    file_path = 'Crosshairs/L20_T4_G2.png'
     project_id = "fleet-point-308504"
     model_id = "IOD4595987191406002176"
+
+    os.remove('static/img/c1_cropped.png')
 
     with open(file_path, 'rb') as ff:
         content = ff.read()
@@ -50,12 +52,12 @@ def cropImage(uploaded_file):
     og_img = cv.imread(file_path)
     height, width, channels = og_img.shape
     cropped_img = og_img[round(height * points[0][1]):round(height * points[1][1]), round(width * points[0][0]):round(width * points[1][0])]
-    cv.imwrite('static/img/cropped.png', cropped_img)
-    os.remove(uploaded_file)
+    cv.imwrite('static/img/c1_cropped.png', cropped_img)
+    os.remove(file_path)
 
-    time.sleep(1)
+    # time.sleep(1)
 
-    return "img/cropped.png"
+    return "img/c1_cropped.png"
 
 def readOutlines(crosshair_file):
     '''
@@ -82,8 +84,8 @@ def readOutlines(crosshair_file):
     cnt = contours[3]
     # defines bounding rectangle around crosshair and prints width and height of box
     x, y, w, h = cv.boundingRect(cnt)
-    # print('Width = ' + str(w) + ' pixels')
-    # print('Height = ' + str(h) + ' pixels')
+    print('Width = ' + str(w) + ' pixels')
+    print('Height = ' + str(h) + ' pixels')
     # draws bounding box in red onto blank canvas
     rect = cv.minAreaRect(cnt)
     box = cv.boxPoints(rect)
@@ -91,7 +93,7 @@ def readOutlines(crosshair_file):
     cv.drawContours(blank, [box], -1, (0, 0, 255), 1)
     cv.imshow('Contours Drawn', blank)
     
-    im = Image.open(crosshair_file)
+    im = Image.open('Crosshairs/c1_cropped.png')
     rgb_im = im.convert('RGB')
     r, g, b = rgb_im.getpixel(((x + math.ceil(w/2)),(y + math.ceil(h/2))))
     thickness = 2 + ((w - 5) * 0.5)
@@ -110,22 +112,9 @@ def readOutlines(crosshair_file):
     D = np.sqrt(dx*dx+dy*dy)
     #Thickness and size roughly increase pixel distance by 2, 2.4 respectively, each addition of gap increases distance by 2
     gap = round(((D - thickness*2 - size*2.4)/2 + (D - thickness*2 - size*2.4)%2),0)
-    print("gap done")
 
-    console = "cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + "; cl_crosshairgap " + str(gap)
-    print("console done")
+    print("cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + "; cl_crosshairgap " + str(gap))
+    cv.waitKey(0)
     cv.destroyAllWindows()
 
-    retData = {
-        "red": r,
-        "blue": b,
-        "green": g,
-        "size": size,
-        "thickness": thickness,
-        "gap": gap,
-        "console":console,
-    }
-
-    print("done")
-
-    return retData
+    
