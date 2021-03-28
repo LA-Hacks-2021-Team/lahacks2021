@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Crosshair Identifier</title>
+        <title>Crosshair Analyzer</title>
         <link rel="stylesheet" href="/static/css/main.css"/>
         {{ dropzone.load_css() }}
         {{ dropzone.style('border: 2px dashed #0087F7; \
@@ -8,7 +8,7 @@
             min-height: 200px; background-color: #616E7C; color: #F5F7FA;') }}
     </head>
     <body>
-        <h1>Crosshair Identifier</h1>
+        <h1>Crosshair Analyzer</h1>
         <h2>Upload a Screenshot Below</h2>
 
         {{ dropzone.create(action=url_for('upload_files')) }}
@@ -17,24 +17,26 @@
             <button id="reset">Reset</button>
         </div>
 
-        <p id="settings" style="display: none;color:#F5F7FA;text-align: center;"></p>
-        <p style="text-align: center;"><img id="cropped" src="" style="display: none; width: 15%; height: auto;"></p>
+        <p id="settings" style="display: none;color:#F5F7FA;text-align: center;">Analyzing Crosshair</p>
+        <p style="text-align: center;"><img id="cropped" src="https://i.redd.it/lgs9hva1ur251.gif" style="display: none; width: 15%; height: auto;"></p>
     
         {{ dropzone.load_js() }}
         {{ dropzone.config() }}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script>
             $('#click').click(() =>{
+                $('#settings').show();
+                $('#cropped').show();
                 $.ajax({
                     type: 'GET',
                     url: '/data',
                     success: (resp) => {
-                        const height = resp.height;
-                        const width = resp.width;
-                        $('#settings').text(`Height: ${height} Width: ${width}`);
-                        $('#settings').show();
-                        $('#cropped').attr("src","{{url_for('static', filename='img/c1_cropped.png')}}");
-                        $('#cropped').show();
+                         $('#settings').append(`Color: (${resp.red},${resp.green},${resp.blue}) <br/>
+                            Size: ${resp.size} <br/>
+                            Thickness: ${resp.thickness} <br/>
+                            Gap: ${resp.gap} <br/>
+                            ${resp.console} <br/>`);
+                        $('#cropped').attr("src","{{url_for('static', filename='img/cropped.png')}}");
                     }
                 });
             });
@@ -44,4 +46,3 @@
             });
         </script>
     </body>
-</html>
