@@ -16,6 +16,7 @@ app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
 app.config['UPLOAD_PATH'] = 'uploads'
 
 app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image'
+app.config['DROPZONE_ALLOWED_FILE_TYPE'] = '.jpg'
 app.config['DROPZONE_MAX_FILES'] = 1
 app.config['DROPZONE_MAX_FILE_SIZE'] = 10
 
@@ -49,6 +50,11 @@ def too_large(e):
 
 @app.route('/data')
 def data():
+    try:
+        os.listdir('uploads')[0]
+    except:
+        return jsonify({})
+
     image = cropImage('uploads/'+os.listdir('uploads')[0])
     data = readOutlines('static/'+image)
     return jsonify(data)
