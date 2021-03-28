@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=r'lahacks.json'
 
-    file_path = 'Crosshairs/c30.png'
+    file_path = 'Crosshairs/c1demo.png'
     project_id = "fleet-point-308504"
     model_id = "IOD4595987191406002176"
 
@@ -87,8 +87,9 @@ if __name__ == '__main__':
     im = Image.open('Crosshairs/c1_cropped.png')
     rgb_im = im.convert('RGB')
     r, g, b = rgb_im.getpixel(((x + math.ceil(w/2)),(y + math.ceil(h/2))))
-    thickness = 0.5 + ((w - 3) * 0.5)
-    size = math.ceil(h / 2)
+    thickness = 2 + ((w - 5) * 0.5)
+    size = math.floor(h / 2)
+    
     print("cl_crosshaircolor 5; cl_crosshaircolor_b " + str(b) + "; cl_crosshaircolor_r " + str(r) + "; cl_crosshaircolor_g " + str(g) + "; cl_crosshairsize " + str(size)  + "; cl_crosshairthickness " + str(thickness) + ";")
     cv.waitKey(0)
     cv.destroyAllWindows()
